@@ -1,4 +1,5 @@
 import pandas as pds
+from pathlib import Path
 
 def widen_pose(long_csv, wide_csv):
     """
