@@ -78,7 +78,6 @@ The system analyzes climbing videos using **MediaPipe Pose** to extract joint la
 
 ### Component Architecture
 
-```mermaid
 %% diagram: climbing-arch
 flowchart TD
     A[Video Input] --> B[Pose Extraction (MediaPipe)]
@@ -90,7 +89,7 @@ flowchart TD
     G --> H[Criteria Evaluation]
     H --> I[Feedback Generator]
     I --> J[Report Output]
-```
+
 
 ### Sequence of Analysis
 
@@ -108,23 +107,6 @@ sequenceDiagram
     System->>Analyzer: Transform data (wide CSV)
     Analyzer->>Analyzer: Estimate intrinsics+wall pose from session clip
     Analyzer->>Analyzer: Back-project 2D joints to 3D wall frame
-    Analyzer->>Analyzer: Detect phases (prep/reach/stabilize)
-    Analyzer->>Analyzer: Apply 6 criteria rules
-    Analyzer-->>System: Feedback results
-    System-->>User: Report with errors & advice
-```mermaid
-%% diagram: climbing-seq
-sequenceDiagram
-    participant User
-    participant System
-    participant MediaPipe
-    participant Analyzer
-
-    User->>System: Upload climbing video + short ArUco wall clip
-    System->>MediaPipe: Extract pose landmarks
-    MediaPipe-->>System: Landmark CSV
-    System->>Analyzer: Transform data (wide CSV)
-    Analyzer->>Analyzer: Estimate wall pose (ArUco) & 3D back-projection
     Analyzer->>Analyzer: Detect phases (prep/reach/stabilize)
     Analyzer->>Analyzer: Apply 6 criteria rules
     Analyzer-->>System: Feedback results
