@@ -14,8 +14,9 @@ class VelocityCalculator:
 
     The output of this calculator gives all the speed values for each important point at each frame. 
     '''
-    def __init__(self, fps=None):
-        pass
+    def __init__(self, fps=None, smoothing_method='savgol', smoothing_strength='aggressive'):
+        self.smoothing_method = smoothing_method
+        self.smoothing_strength = smoothing_strength
 
     def calculate_from_csv(self, csv_path):
         pose_data = self._convert_csv(csv_path)
@@ -61,6 +62,16 @@ class VelocityCalculator:
         }
 
         return pose_data
+    
+    def _smooth_position_data(self, position_array):
+        if self.smoothing_method == 'none':
+            return position_array
+        
+        if self.smoothing_method == 'savgol':
+            from scipy.signal import savgol_filter
+            window_size = 21
+            polyorder = 2
+            return savgol_filter(position_array, window_size, polyorder)
 
     def calculate_velocities(self, pose_data, fps=30.0):
         """
@@ -71,9 +82,9 @@ class VelocityCalculator:
         for landmark, coords in pose_data.items():
             if all(coord in coords for coord in ['x', 'y', 'z']):
                 # Get NumPy arrays sepperated into their own variables
-                x = coords['x']
-                y = coords['y'] 
-                z = coords['z']
+                x = self._smooth_position_data(coords['x'])
+                z = self._smooth_position_data(coords['z'])
+                y = self._smooth_position_data(coords['y']) 
                 
                 #use numpy to calculate the differences while time progresses. These are the arrays with dx (change in time of x)
                 dx = np.diff(x) * fps  # meters/second

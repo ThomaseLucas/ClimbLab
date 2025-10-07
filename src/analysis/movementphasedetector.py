@@ -9,7 +9,7 @@ class MovementPhaseDetector:
         pass
 
     def segment_motions(self, csv_path):
-        calc = VelocityCalculator(fps=30)
+        calc = VelocityCalculator(fps=30, smoothing_method='savgol', smoothing_strength='aggressive')
         vel_data =calc.calculate_from_csv(csv_path)
 
         self.find_z_score_at_joint('left_knee', vel_data)
@@ -25,6 +25,9 @@ class MovementPhaseDetector:
             windows[landmark] = self.find_movement_intervals(z_scores[landmark])
 
         print(windows)
+
+
+
         
 
         
@@ -41,7 +44,7 @@ class MovementPhaseDetector:
             # Check for crossing below threshold
             if (z_score_array[i-1] > threshold) and (z_score_array[i] <= threshold) and (start is not None):
                 duration = i - start
-                if duration >= 5:
+                if duration >= 7:
                     intervals.append([start, i])
                     start = None  # Only reset after checking
         
@@ -69,12 +72,12 @@ class MovementPhaseDetector:
 
         # timestamps = velocity_data[landmark_name]['timestamps'][1:]  # Remove first timestamp
         
-        plt.plot(z_scores)
-        plt.title(f"Z-scores over time for {landmark_name}")
-        plt.xlabel("Frame")
-        plt.ylabel("Z-score")
-        plt.grid(True)  # Makes it easier to read
-        plt.show()
+        # plt.plot(z_scores)
+        # plt.title(f"Z-scores over time for {landmark_name}")
+        # plt.xlabel("Frame")
+        # plt.ylabel("Z-score")
+        # plt.grid(True)  # Makes it easier to read
+        # plt.show()
 
         return z_scores
 
