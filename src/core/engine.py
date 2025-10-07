@@ -18,6 +18,7 @@ from widen_data import widen_pose
 # from analysis.velocitycalculator import VelocityCalculator  # We'll add this later
 
 from analysis.velocitycalculator import VelocityCalculator
+from analysis.movementphasedetector import MovementPhaseDetector
 
 def create_parser():
     """Create command-line argument parser"""
@@ -60,11 +61,6 @@ Examples:
     )
     
     return parser
-
-def calculate_velocities(csv_path):
-    calc = VelocityCalculator(fps=30)
-
-    calc.calculate_from_csv(csv_path)
 
 def main():
     """Main application entry point"""
@@ -111,7 +107,8 @@ def main():
             
             # Step 3: Calculate velocities (placeholder for now)
             print("🏃 Step 3: Calculating movement velocities...")
-            calculate_velocities(csv_path=wide_csv)
+            movementfinder = MovementPhaseDetector()
+            movementfinder.segment_motions(csv_path=wide_csv)
             print("⚠️  Velocity analysis coming soon!")
             
             # Step 4: Detect movement phases (placeholder for now)

@@ -22,10 +22,15 @@ class VelocityCalculator:
 
         # Get actual FPS from the CSV data
         fps = self._get_fps_from_data()
+
+
+        # print("Detected fps: ", fps)
         velocity_data = self.calculate_velocities(pose_data, fps)
         
         # Validate the results
         validated_data = self.validate_velocities(velocity_data)
+
+        # print("Velocity range:", np.min(validated_data), "to", np.max(validated_data))
         # self.test_with_known_movement(validated_data)
         
         return validated_data
