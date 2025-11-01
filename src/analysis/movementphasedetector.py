@@ -12,7 +12,7 @@ class MovementPhaseDetector:
         calc = VelocityCalculator(fps=30, smoothing_method='savgol', smoothing_strength='aggressive')
         vel_data =calc.calculate_from_csv(csv_path)
 
-        self.find_z_score_at_joint('left_knee', vel_data)
+        # self.find_z_score_at_joint('left_knee', vel_data)
 
         z_scores = {}
 
@@ -26,9 +26,8 @@ class MovementPhaseDetector:
 
         print(windows)
 
+        # self._identify_prep_phases(windows, vel_data)
 
-
-        
 
         
     def find_movement_intervals(self, z_score_array):
@@ -81,4 +80,11 @@ class MovementPhaseDetector:
 
         return z_scores
 
+    def _identify_prep_phases(self, windows, vel_data):
+        total_frames = range(len(vel_data[list(vel_data.keys())[0]]['speed_3d']))
+        for frame_i in total_frames:
+            right_ankle_moving = np.where(frame_i in windows['RIGHT_ANKLE'], True, False)
+            left_ankle_moving = np.where(frame_i in windows['LEFT_ANKLE'], True, False)
+            print(right_ankle_moving)
+            print(left_ankle_moving)
 
